@@ -16,12 +16,10 @@ const EmployeeReducer = createSlice({
         },
         updateEmployeeInfo : (state, action) => {
             state.employeeInfo = (state.employeeInfo || []).map((event) => {
-                console.log('event.id.toString() === action?.payload.id', event.id.toString() === action?.payload.id.toString(), event.id.toString() ,  action?.payload.id.toString());
                 return event.id.toString() === action?.payload.id.toString()
                     ? { ...event, ...action.payload }
                     : event
             });
-            
         },
         deleteEmployeeInfo: (state, action) => {            
             state.employeeInfo = state.employeeInfo.filter((d) => d.id.toString() !== action.payload.toString())
