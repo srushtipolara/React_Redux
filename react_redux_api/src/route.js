@@ -1,11 +1,11 @@
+import Login from "./auth/login";
 import AddEmployeeList from "./Employee/AddEmployeeList";
-import EmployeeList from "./Employee/EmployeList";
 import UpdateEmployee from "./Employee/UpdateEmployee";
 
 const pageRouter = [
-    {path:"/", Component : EmployeeList},
     {path:"/add", Component : AddEmployeeList},
     {path:"/update", Component : UpdateEmployee},
+    {path:"/login", Component : Login},
 ]
 
 export default pageRouter;

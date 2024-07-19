@@ -2,6 +2,8 @@ import React from 'react';
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import pageRouter from './route';
+import EmployeeList from './Employee/EmployeList';
+import PrivateRoute from './PrivateRoute';
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
             <Route key={path} path={path} element={<Component />}  />
           ))
         }
+            <Route path="/" element={<PrivateRoute component={EmployeeList}></PrivateRoute>}  />
+        
       </Routes>
     </React.Fragment>
   );

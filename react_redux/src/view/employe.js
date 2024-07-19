@@ -34,7 +34,7 @@ const Employee = () => {
     }
 
     useEffect(() => {
-        if(JSON.parse(localStorage.getItem("employeeList")).length <= 0){
+        if(JSON.parse(localStorage.getItem("employeeList"))?.length <= 0){
             dispatch(getEmployeeInfo(employee))
             localStorage.setItem("employeeList", JSON.stringify(employeeList));
         }
