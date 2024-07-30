@@ -6,31 +6,50 @@ import { useNavigate } from 'react-router-dom'
 const AddEmployee = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const [first, setFirst] = useState('')
-    // const [value, setvalue] = useState({
-    //     first: ''
-    // })
-    const [error, setError] = useState('')
+    const [value, setValue] = useState({
+        first: '',
+        description: ''
+    })
+    const [error, setError] = useState({
+        first: '',
+        description: ''
+    })
     const [emList, setEmList] = useState([])
     // handle pending states
     const [isPending, startTransition] = useTransition()
 
-    const addEmployee = (firstName) => {
-        if (firstName.trim() === "") {
-            return "Name is required"
+    const handleValidation = (value) => {
+        let errors = {
+            first: '',
+            description: ''
+        };
+        if (value.first?.trim() === '') {
+            errors.first = "Name is required";
         }
-        const newEmployeeInfo = { "id": Math.floor(Math.random() * (20 - 10) + 10), "firstName": firstName }
-        dispatch(addEmployeeInfo(newEmployeeInfo))
-        const updatedEmList = [...emList, newEmployeeInfo];
-        localStorage.setItem("employeeList", JSON.stringify(updatedEmList))
-        setEmList(updatedEmList)
-        setError('')
+        if (value.description?.trim() === '') {
+            errors.description = "Description is required";
+        }
+        return errors;
+    }
+
+    const addEmployee = async (value) => {
+        const errors = handleValidation(value)
+        if (errors.first === '' && errors.description === '') {
+            const newEmployeeInfo = { "id": Math.floor(Math.random() * (20 - 10) + 10), "firstName": value.first, "description": value.description }
+            dispatch(addEmployeeInfo(newEmployeeInfo))
+            const updatedEmList = [...emList, newEmployeeInfo];
+            localStorage.setItem("employeeList", JSON.stringify(updatedEmList))
+            setEmList(updatedEmList)
+            setError(null)
+        } else {
+            return errors;
+        }
     }
 
     const handleSubmit = (event) => {
         event.preventDefault()
         startTransition(async () => {
-            const error = await addEmployee(first)
+            const error = await addEmployee(value)
             if (error) {
                 setError(error)
                 return;
@@ -38,13 +57,12 @@ const AddEmployee = () => {
             navigate("/")
         })
     }
-    
+
     const handleChange = (event) => {
-        //  const changeValue = {[name]: event.target.value};
-        //  console.log("changeValue ==>", changeValue);
-        setFirst(event.target.value);
+        const { name, value } = event.target;
+        setValue({ ...value, [name]: value })
     }
-    
+
     useEffect(() => {
         setEmList(JSON.parse(localStorage.getItem("employeeList")) || [])
     }, [])
@@ -52,11 +70,19 @@ const AddEmployee = () => {
     return (
         <React.Fragment>
             <form onSubmit={handleSubmit}>
-                <label>firstName</label>
-                <input type='text' value={first} onChange={handleChange} />
+                <div>
+                    <label>firstName</label>
+                    <input type='text' name="first" value={value.first} onChange={handleChange} />
+                </div>
+                {error.first ?? <p>{error.first}</p>}
+                <div>
+                    <label>description</label>
+                    <textarea type='text' name="description" value={value.description} onChange={handleChange} />
+                </div>
+                {error.description ?? <p>{error.description}</p>}
                 <button type='submit' disabled={isPending}>submit</button>
             </form>
-            {error ?? <p>{error}</p>}
+
         </React.Fragment>
     )
 }

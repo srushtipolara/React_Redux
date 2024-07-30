@@ -23,9 +23,9 @@ const Employee = () => {
 
     const handleDelete  = (id) => {
         dispatch(deleteEmployeeInfo(id))
-        localStorage.setItem("employeeList", JSON.stringify(employeeInfo.filter((i) => i.id !== id)))
-        const store = JSON.parse(localStorage.getItem("employeeList"));
-        setEmployeeInfo(store)
+        const deleteId = employeeInfo.filter((i) => i.id !== id);
+        localStorage.setItem("employeeList", JSON.stringify(deleteId))
+        setEmployeeInfo(deleteId)
     }
 
     const handleUpdate = (item) => {
@@ -53,6 +53,7 @@ const Employee = () => {
                 {(employeeInfo || [])?.map((emp) => (
                     <div key={emp.id}>
                         <li>{emp.firstName}</li>
+                        <li>{emp.description}</li>
                         <li><button onClick={() =>handleDelete(emp.id)}>delete Employee</button></li>
                         <li><button onClick={() =>handleUpdate(emp)}>update Employee</button></li>
 
